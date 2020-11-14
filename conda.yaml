@@ -1,0 +1,11 @@
+name: pl-mlflow-example
+channels:
+  - pytorch
+dependencies:
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cudatoolkit=10.2
+  - pip:
+    - pytorch-lightning
+    - mlflow
