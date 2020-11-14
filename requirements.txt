@@ -1,0 +1,5 @@
+torch==1.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
+torchvision==0.8.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html
+torchaudio==0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
+pytorch_lightning
+mlflow
