@@ -1,4 +1,7 @@
 from models import SimpleClassifier
+import mlflow
+
+mlflow.pytorch.autolog()
 
 import torch
 import pytorch_lightning as pl
