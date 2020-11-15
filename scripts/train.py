@@ -14,6 +14,7 @@ except Exception as e:
     from tests.base.datasets import MNIST
 
 from pytorch_lightning import Trainer
+from pytorch_lightning import callbacks
 from pytorch_lightning import loggers
 from models import SimpleClassifier
 from omegaconf import OmegaConf
@@ -28,7 +29,7 @@ PROJECT_CONFIG_FILE = PROJECT_PATH / 'MLProject'
 
 # load training configuration
 conf = OmegaConf.load(TRAIN_CONFIG_PATH)
-projconf = OmegaConf.load(PROJECT_CONFIG)
+projconf = OmegaConf.load(PROJECT_CONFIG_FILE)
 conf.experiment.name = projconf.name
 
 # define hyper parameters
@@ -46,7 +47,6 @@ val_loader = DataLoader(mnist_val, batch_size=batch_size)
 test_loader = DataLoader(mnist_test, batch_size=batch_size)
 
 # define logger(s)
-
 logger = []
 
 if conf.experiment.tf_log is not None: # use tensorboard logger
@@ -61,13 +61,21 @@ mlf_logger = loggers.MLFlowLogger(experiment_name=conf.experiment.name,
                                   tracking_uri=f"file:{str(PROJECT_PATH / conf.experiment.mlflow_log)}")
 logger.append(mlf_logger)
 
+# define checkpoint callback
+CHECKPOINTS_PATH = PROJECT_PATH / conf.experiment.checkpoints
+CHECKPOINTS_PATH.mkdir(exist_ok=True, parents=True)
+
+checkpoint_callback = callbacks.ModelCheckpoint(dirpath=str(CHECKPOINTS_PATH),
+                                                save_top_k=-1) # save all epochs
+
 # define model
 model = SimpleClassifier(**hparams)
 
 # define trainer
 trainer = pl.Trainer(max_epochs=num_epochs,  
                      gpus=1, 
-                     logger=logger)
+                     logger=logger,
+                     callbacks=[checkpoint_callback])
 
 # run training
 trainer.fit(model, train_loader, val_loader)

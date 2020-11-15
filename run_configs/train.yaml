@@ -2,6 +2,7 @@ experiment:
   name: 
   mlflow_log: logs/mlflow
   tf_log: logs/tf
+  checkpoints: logs/checkpoints
 
 model:
   hidden_dim: 256
