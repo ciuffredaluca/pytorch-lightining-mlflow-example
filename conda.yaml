@@ -10,3 +10,4 @@ dependencies:
   - pip:
     - pytorch-lightning
     - mlflow
+    - omegaconf
